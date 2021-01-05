@@ -1,0 +1,52 @@
+---
+- name: Set up application
+  hosts: all
+  vars:
+    app_files:
+      - requirements.txt
+      - main.py
+    app_root: /home/pi/dht22
+
+  tasks:
+    - name: Update application files
+      copy:
+        src: "{{ item }}"
+        dest: "{{ app_root }}/"
+      with_items: "{{ app_files }}"
+      notify:
+        - Restart sensor loop
+
+    - name: Install python requirements
+      pip:
+        requirements: "{{ app_root}}/requirements.txt"
+        executable: pip3
+
+    - name: Copy systemd service files
+      become: true
+      copy:
+        src: "{{ item }}"
+        dest: /etc/systemd/system
+      with_items:
+        - dht22-sensor-loop.service
+      notify:
+        - Reload systemd
+        - Restart sensor loop
+
+
+  handlers:
+    - name: Start sensor loop
+      become: true
+      service:
+        name: started
+        enabled: enabled
+
+    - name: Restart sensor loop
+      become: true
+      service:
+        name: dht22-sensor-loop
+        state: restarted
+
+    - name: Reload systemd
+      become: true
+      systemd:
+        daemon_reload: true
