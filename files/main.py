@@ -9,9 +9,9 @@ DHT_PIN = 4
 interval = 60.0
 debug = False
 
-connection = sqlite3.connect("../app/data.db")
+connection = sqlite3.connect("data.db")
 
-sql = "INSERT INTO data(ext_temp, humidity) VALUES(?, ?)"
+sql = "INSERT INTO data(temperature, humidity) VALUES(?, ?)"
 
 while True:
     humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)

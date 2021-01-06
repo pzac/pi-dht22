@@ -5,6 +5,7 @@
     app_files:
       - requirements.txt
       - main.py
+      - structure.sql
     app_root: /home/pi/dht22
 
   tasks:
@@ -20,6 +21,12 @@
       pip:
         requirements: "{{ app_root}}/requirements.txt"
         executable: pip3
+
+    - name: Create database
+      shell:
+        chdir: "{{ app_root }}"
+        cmd: sqlite3 data.db < structure.sql
+        creates: "{{ app_root }}/data.db"
 
     - name: Copy systemd service files
       become: true
