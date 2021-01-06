@@ -1,0 +1,15 @@
+[Unit]
+Description=DHT22 Sensor App service
+After=network.target
+
+[Service]
+User=pi
+Group=www-data
+WorkingDirectory=/home/pi/dht22
+ExecStart=/usr/local/bin/uwsgi --ini web.ini
+Type=idle
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

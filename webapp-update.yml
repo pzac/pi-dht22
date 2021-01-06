@@ -1,0 +1,28 @@
+---
+- name: Update and restart the web app
+  hosts: all
+  gather_facts: false
+  vars:
+    app_root: /home/pi/dht22
+    webapp_files:
+      - web.ini
+      - web.py
+      - wsgi.py
+      - static
+      - templates
+
+  tasks:
+    - name: Update webapp files
+      copy:
+        src: "webapp/{{ item }}"
+        dest: "{{ app_root }}/"
+      with_items: "{{ webapp_files }}"
+      notify:
+        - Restart sensor app
+
+  handlers:
+    - name: Restart sensor app
+      become: true
+      service:
+        name: dht22-sensor-app
+        state: restarted

@@ -7,6 +7,12 @@
       - main.py
       - structure.sql
     app_root: /home/pi/dht22
+    webapp_files:
+      - web.ini
+      - web.py
+      - wsgi.py
+      - static
+      - templates
 
   tasks:
     - name: Update application files
@@ -22,6 +28,14 @@
         requirements: "{{ app_root}}/requirements.txt"
         executable: pip3
 
+    - name: Update webapp files
+      copy:
+        src: "webapp/{{ item }}"
+        dest: "{{ app_root }}/"
+      with_items: "{{ webapp_files }}"
+      notify:
+        - Restart sensor app
+
     - name: Create database
       shell:
         chdir: "{{ app_root }}"
@@ -35,17 +49,27 @@
         dest: /etc/systemd/system
       with_items:
         - dht22-sensor-loop.service
+        - dht22-sensor-app.service
       notify:
         - Reload systemd
         - Restart sensor loop
+        - Restart sensor app
 
+    - name: Update Nginx configuration
+      become: true
+      copy:
+        src: nginx-site.conf
+        dest: /etc/nginx/sites-available/dht22
+
+    - name: Link nginx configuration
+      become: true
+      file:
+        src: /etc/nginx/sites-available/dht22
+        dest: /etc/nginx/sites-enabled/dht22
+        state: link
+      notify: Restart nginx
 
   handlers:
-    - name: Start sensor loop
-      become: true
-      service:
-        name: started
-        enabled: enabled
 
     - name: Restart sensor loop
       become: true
@@ -53,7 +77,21 @@
         name: dht22-sensor-loop
         state: restarted
 
+    - name: Restart sensor app
+      become: true
+      service:
+        name: dht22-sensor-app
+        state: restarted
+
     - name: Reload systemd
       become: true
       systemd:
         daemon_reload: true
+
+    - name: Restart nginx
+      become: true
+      service:
+        name: nginx
+        state: restarted
+        enabled: true
+

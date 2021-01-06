@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>DHT22 Weather Station</title>
+    <link rel="stylesheet" href='/static/bulma.min.css' />
+    <link rel="stylesheet" href='/static/main.css' />
+    <link rel="stylesheet" href='/static/c3.min.css' />
+    <script src="/static/d3.v5.min.js" charset="utf-8"></script>
+    <script src="/static/c3.min.js"></script>
+    <script src="/static/app.js"></script>
+  </head>
+  <body>
+    <section class="hero is-info">
+      <div class="hero-body">
+        <div class="container is-fluid">
+          <h1 class="title">
+            DHT22 Weather Station
+          </h1>
+        </div>
+      </div>
+    </section>
+
+    <section class="has-background-light">
+      <div class="container is-fluid">
+        <div class="p-3 is-flex is-flex-wrap-wrap is-justify-content-space-around">
+          <div class="mr-3">
+            <strong>Time</strong>
+            <span class="">{{ data['time'] }}</span>
+          </div>
+          <div class="mr-3">
+            <strong>Temperature</strong>
+            <span class="">{{ data['temperature'] }}C</span>
+          </div>
+          <div class="mr-3">
+            <strong>Humidity</strong>
+            <span class="">{{ data['humidity'] }}%</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <main role="main" class="container is-fluid">
+      <h2 class="title">Last hour</h2>
+      <div class="columns">
+        <div class="column is-one-half">
+          <div class="p-3">
+            <div id="temperature-chart-last-hour"></div>
+          </div>
+        </div>
+        <div class="column is-one-half">
+          <div class="p-3">
+            <div id="humidity-chart-last-hour"></div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="title">Last 24 hours</h2>
+      <div class="columns">
+        <div class="column is-one-half">
+          <div class="p-3">
+            <div id="temperature-chart-last-24-hours"></div>
+          </div>
+        </div>
+        <div class="column is-one-half">
+          <div class="p-3">
+            <div id="humidity-chart-last-24-hours"></div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="title">Last week</h2>
+      <div class="columns">
+        <div class="column is-one-half">
+          <div class="p-3">
+            <div id="temperature-chart-last-week"></div>
+          </div>
+        </div>
+        <div class="column is-one-half">
+          <div class="p-3">
+            <div id="humidity-chart-last-week"></div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+</html>
