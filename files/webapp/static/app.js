@@ -1,39 +1,38 @@
-function last_hour_charts(data) {
+function temperature_chart(element, data, time_tick_format = '%H:%M') {
   c3.generate({
-    bindto: '#temperature-chart-last-hour',
-      data: {
-        x: 'x',
-        xFormat: '%Y-%m-%d %H:%M:%S',
-        columns: [
-          ['x'].concat(data.time),
-          ['temperature'].concat(data.temperature)
-        ],
-        axes: {
-          temperature: 'y'
-        },
-        type: 'spline',
-      },
-      axis: {
-        x: {
-          type: 'timeseries',
-          tick: {
-            format: '%H:%M',
-            rotate: -60
-          }
-        },
-        y: {
-          tick: {
-            format: function (d) { return d + " C" }
-          }
+    bindto: element,
+    data: {
+      x: 'x',
+      xFormat: '%Y-%m-%d %H:%M:%S',
+      columns: [
+        ['x'].concat(data.time),
+        ['temperature'].concat(data.temperature)
+      ],
+      axes: {temperature: 'y'},
+      type: 'spline',
+    },
+    axis: {
+      x: {
+        type: 'timeseries',
+        tick: {
+          format: time_tick_format,
+          rotate: -60
         }
       },
-      point: {
-        show: false
-      },
+      y: {
+        tick: {format: function (d) { return d + " C" } }
+      }
+    },
+    point: {show: false },
+    spline: {
+      interpolation: {type: 'monotone'}
+    }
   });
+}
 
+function humidity_chart(element, data, time_tick_format = '%H:%M') {
   c3.generate({
-    bindto: '#humidity-chart-last-hour',
+    bindto: element,
       data: {
         x: 'x',
         xFormat: '%Y-%m-%d %H:%M:%S',
@@ -41,167 +40,42 @@ function last_hour_charts(data) {
           ['x'].concat(data.time),
           ['humidity'].concat(data.humidity)
         ],
-        axes: {
-          humidity: 'y',
-        },
-        type: 'spline',
+        axes: {humidity: 'y', },
+        type: 'area-spline',
       },
       axis: {
         x: {
           type: 'timeseries',
           tick: {
-            format: '%H:%M',
+            format: time_tick_format,
             rotate: -60
           }
         },
         y: {
-          tick: {
-            format: function (d) { return d + " %" }
-          }
+          tick: {format: function (d) { return d + " %" } }
         },
       },
-      point: {
-        show: false
-      },
+      point: {show: false},
+      spline: {
+        interpolation: {type: 'monotone'}
+      }
   });
+}
 
+function last_hour_charts(data) {
+  temperature_chart('#temperature-chart-last-hour', data)
+  humidity_chart('#humidity-chart-last-hour', data)
 }
 
 function last_24_hours_charts(data) {
-  c3.generate({
-    bindto: '#temperature-chart-last-24-hours',
-      data: {
-        x: 'x',
-        xFormat: '%Y-%m-%d %H:%M:%S',
-        columns: [
-          ['x'].concat(data.time),
-          ['temperature'].concat(data.temperature)
-        ],
-        axes: {
-          temperature: 'y'
-        },
-        type: 'line',
-      },
-      axis: {
-        x: {
-          type: 'timeseries',
-          tick: {
-            format: '%H:%M',
-            rotate: -60
-          }
-        },
-        y: {
-          tick: {
-            format: function (d) { return d + " C" }
-          }
-        }
-      },
-      point: {
-        show: false
-      }
-  });
-
-  c3.generate({
-    bindto: '#humidity-chart-last-24-hours',
-      data: {
-        x: 'x',
-        xFormat: '%Y-%m-%d %H:%M:%S',
-        columns: [
-          ['x'].concat(data.time),
-          ['humidity'].concat(data.humidity)
-        ],
-        axes: {
-          humidity: 'y',
-        },
-        type: 'line',
-      },
-      axis: {
-        x: {
-          type: 'timeseries',
-          tick: {
-            format: '%H:%M',
-            rotate: -60
-          }
-        },
-        y: {
-          tick: {
-            format: function (d) { return d + " %" }
-          }
-        }
-      },
-      point: {
-        show: false
-      }
-  });
+  temperature_chart('#temperature-chart-last-24-hours', data)
+  humidity_chart('#humidity-chart-last-24-hours', data)
 }
 
 
 function last_week_charts(data) {
-  c3.generate({
-    bindto: '#temperature-chart-last-week',
-      data: {
-        x: 'x',
-        xFormat: '%Y-%m-%d %H:%M:%S',
-        columns: [
-          ['x'].concat(data.time),
-          ['temperature'].concat(data.temperature)
-        ],
-        axes: {
-          temperature: 'y'
-        },
-        type: 'line',
-      },
-      axis: {
-        x: {
-          type: 'timeseries',
-          tick: {
-            format: '%Y-%m-%d %H:%M',
-            rotate: -60
-          }
-        },
-        y: {
-          tick: {
-            format: function (d) { return d + " C" }
-          }
-        }
-      },
-      point: {
-        show: false
-      }
-  });
-
-  c3.generate({
-    bindto: '#humidity-chart-last-week',
-      data: {
-        x: 'x',
-        xFormat: '%Y-%m-%d %H:%M:%S',
-        columns: [
-          ['x'].concat(data.time),
-          ['humidity'].concat(data.humidity)
-        ],
-        axes: {
-          humidity: 'y',
-        },
-        type: 'line',
-      },
-      axis: {
-        x: {
-          type: 'timeseries',
-          tick: {
-            format: '%Y-%m-%d %H:%M',
-            rotate: -60
-          }
-        },
-        y: {
-          tick: {
-            format: function (d) { return d + " %" }
-          }
-        }
-      },
-      point: {
-        show: false
-      }
-  });
+  temperature_chart('#temperature-chart-last-week', data, '%m-%d %H:%M')
+  humidity_chart('#humidity-chart-last-week', data, '%m-%d %H:%M')
 }
 
 document.addEventListener('DOMContentLoaded', function(){
